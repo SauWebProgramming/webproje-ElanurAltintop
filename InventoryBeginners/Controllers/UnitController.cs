@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using InventoryBeginners.Models;
 using InventoryBeginners.Interfaces;
-using InventoryBeginners.Models;
 
 namespace InventoryBeginners.Controllers
 {

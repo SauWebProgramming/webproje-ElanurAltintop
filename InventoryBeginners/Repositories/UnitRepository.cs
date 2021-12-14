@@ -93,11 +93,31 @@ namespace InventoryBeginners.Repositories
         {
             Unit unit = _context.Units.Where(u => u.Id == id).FirstOrDefault();
             return unit;
+
         }
 
         public List<Unit> GetItems(SortOrder sortedOrder, string sortedProperty)
         {
             throw new NotImplementedException();
+        }
+
+
+        public bool IsUnitNameExists(string name)
+        {
+            int ct = _context.Units.Where(n => n.Name.ToLower() == name.ToLower()).Count();
+            if (ct > 0)
+                return true;
+            else
+                return false;
+        }
+
+        public bool IsUnitNameExists(string name, int Id)
+        {
+            int ct = _context.Units.Where(n => n.Name.ToLower() == name.ToLower() && n.Id != Id).Count();
+            if (ct > 0)
+                return true;
+            else
+                return false;
         }
     }
 }

@@ -20,6 +20,9 @@ namespace InventoryBeginners.Interfaces
 
         Unit Delete(Unit unit);
         List<Unit> GetItems(SortOrder sortedOrder, string sortedProperty);
-        
+
+        public bool IsUnitNameExists(string name);
+        public bool IsUnitNameExists(string name, int Id);
+
     }
 }

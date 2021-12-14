@@ -45,9 +45,10 @@ namespace InventoryBeginners.Repositories
             return unit;
         }
 
-        public List<Unit> GetItems(string SortProperty, SortOrder sortOrder) //unitcontroller da bulunan ındex için
+        private List<Unit> DoSort(List<Unit> units, string SortProperty, SortOrder sortOrder)
         {
-            List<Unit> units = _context.Units.ToList();
+
+
             if (SortProperty.ToLower() == "name")
             {
                 if (sortOrder == SortOrder.Ascending)
@@ -65,12 +66,28 @@ namespace InventoryBeginners.Repositories
             return units;
         }
 
-        public List<Unit> GetItems(SortOrder sortedOrder, string sortedProperty)
+        public PaginatedList<Unit> GetItems(string SortProperty, SortOrder sortOrder, string SearchText="", int pageIndex=1, int pageSize=5 ) //unitcontroller da bulunan ındex için
         {
-            throw new NotImplementedException();
+            List<Unit> units;
+
+            if(SearchText!="" && SearchText!=null)
+            {
+                units = _context.Units.Where(n => n.Name.Contains(SearchText) || n.Description.Contains(SearchText)).ToList();
+            }
+            else
+            {
+                units= _context.Units.ToList();
+            }
+
+
+            units =DoSort(units,SortProperty, sortOrder);
+
+            PaginatedList<Unit> retUnits = new PaginatedList<Unit>(units, pageIndex, pageSize);
+
+            return retUnits;
         }
 
-        
+     
 
         public Unit GetUnit(int id)
         {
@@ -78,5 +95,9 @@ namespace InventoryBeginners.Repositories
             return unit;
         }
 
+        public List<Unit> GetItems(SortOrder sortedOrder, string sortedProperty)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

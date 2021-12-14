@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using InventoryBeginners.Models;
 using InventoryBeginners.Interfaces;
+using System.Linq;
 
 namespace InventoryBeginners.Controllers
 {
@@ -60,7 +61,7 @@ namespace InventoryBeginners.Controllers
             return sortModel;
         }
 
-        public IActionResult Index(string sortExpression="") // read method of the crud operations. it lists all data from 
+        public IActionResult Index(string sortExpression = "", string SearchText = "", int pg=1 ,int pageSize = 5) // read method of the crud operations. it lists all data from action.
         {
             SortModel sortModel = new SortModel();
 
@@ -69,7 +70,18 @@ namespace InventoryBeginners.Controllers
             sortModel.ApplySort(sortExpression);
             ViewData["sortModel"] = sortModel;
 
-            List<Unit> units = _unitRepo.GetItems( sortModel.SortedProperty, sortModel.SortedOrder);//_context.Units.ToList();
+            ViewBag.SearchText = SearchText;
+
+
+            PaginatedList<Unit> units = _unitRepo.GetItems( sortModel.SortedProperty, sortModel.SortedOrder, SearchText,pg, pageSize);//_context.Units.ToList();
+
+            // int totRcs = ((PaginatedList<Unit>)units).TotalRecords;
+
+            var pager = new PageModel(units.TotalRecords ,pg, pageSize);
+            pager.SortExpression = sortExpression;
+            this.ViewBag.Pager = pager;
+
+            // units = units.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
             return View(units);
         }
         

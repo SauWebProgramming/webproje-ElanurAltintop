@@ -13,6 +13,8 @@ namespace InventoryBeginners.Models
         public string SortedProperty { get; set; }
 
         public SortOrder SortedOrder { get; set; }
+
+        public string SortedExpression { get; private set; }
         private List<SortableColumn> sortableColumns = new List<SortableColumn>();
        
         
@@ -43,16 +45,15 @@ namespace InventoryBeginners.Models
         public void ApplySort(string sortExpression)
         {
 
-            //this.GetColumn("name").SortIcon = "";
-            //this.GetColumn("name").SortExpression = "name";
-
-            //this.GetColumn("description").SortIcon = "";
-            //this.GetColumn("description").SortExpression = "description";
+            if(sortExpression==null)
+                sortExpression = "";
+            
 
             if (sortExpression=="")
                 sortExpression = this.SortedProperty;
 
             sortExpression = sortExpression.ToLower();
+            SortedExpression = sortExpression;
 
 
             foreach (SortableColumn sortableColumn in this.sortableColumns)

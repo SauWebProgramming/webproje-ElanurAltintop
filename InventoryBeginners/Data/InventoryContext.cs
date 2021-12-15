@@ -1,4 +1,5 @@
 ﻿using InventoryBeginners.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace InventoryBeginners.Data
 {
-    public class InventoryContext:DbContext
+    public class InventoryContext: IdentityDbContext
     {
         public InventoryContext(DbContextOptions options):base(options)
         {

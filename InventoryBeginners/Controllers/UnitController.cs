@@ -4,9 +4,11 @@ using InventoryBeginners.Models;
 using InventoryBeginners.Interfaces;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryBeginners.Controllers
 {
+    [Authorize]
     public class UnitController : Controller
     {
         private readonly IUnit _unitRepo;

@@ -14,6 +14,7 @@ using InventoryBeginners.Models;
 using InventoryBeginners.Data;
 using InventoryBeginners.Interfaces;
 using InventoryBeginners.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace InventoryBeginners
 {
@@ -31,7 +32,11 @@ namespace InventoryBeginners
         {
             services.AddControllersWithViews();
             services.AddScoped<IUnit, UnitRepository>();
+            
             services.AddDbContext<InventoryContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+               .AddEntityFrameworkStores<InventoryContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,13 +57,15 @@ namespace InventoryBeginners
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication(); //Authentication yapýldý
+            app.UseAuthorization(); //Authorization yapýldý
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

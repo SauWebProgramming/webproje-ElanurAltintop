@@ -92,7 +92,7 @@ namespace InventoryBeginners.Controllers
 
         public IActionResult Create()
         {
-            Category item = new Category();
+            Brand item = new Brand();
             return View(item);
         }
 

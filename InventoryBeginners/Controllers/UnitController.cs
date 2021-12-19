@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using InventoryBeginners.Models;
 using InventoryBeginners.Interfaces;
 using System.Linq;
+using System;
 
 namespace InventoryBeginners.Controllers
 {
@@ -75,13 +76,13 @@ namespace InventoryBeginners.Controllers
 
             PaginatedList<Unit> units = _unitRepo.GetItems( sortModel.SortedProperty, sortModel.SortedOrder, SearchText,pg, pageSize);//_context.Units.ToList();
 
-            // int totRcs = ((PaginatedList<Unit>)units).TotalRecords;
 
             var pager = new PageModel(units.TotalRecords ,pg, pageSize);
             pager.SortExpression = sortExpression;
             this.ViewBag.Pager = pager;
 
-            // units = units.Skip((pg - 1) * pageSize).Take(pageSize).ToList();
+            TempData["CurrentPage"] = pg;
+           
             return View(units);
         }
         
@@ -96,15 +97,42 @@ namespace InventoryBeginners.Controllers
         [HttpPost]
         public IActionResult Create(Unit unit)
         {
+
+            bool bolret = false;
+            string errMessage = "";
             try
             {
-               unit= _unitRepo.Create(unit);
+
+                if (unit.Description.Length < 4 || unit.Description == null)
+                
+                    errMessage = "Unit Description Must be atleast 4 Characters";
+                
+                if (_unitRepo.IsUnitNameExists(unit.Name) == true)
+                    
+                    errMessage = errMessage + " " + " Unit Name " + unit.Name + " Exists Already";
+               
+                if (errMessage == "")
+                {
+                    unit = _unitRepo.Create(unit);
+                    bolret = true;
+                }
             }
-            catch
+            catch(Exception ex)
             {
+                errMessage = errMessage + " " + ex.Message;
+            }
+            if(bolret==false)
+            {
+                TempData["ErrorMessage"] = errMessage;
+                ModelState.AddModelError("", errMessage);
+                return View(unit);
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Unit" + unit.Name + "Created Succesfully";
+                return RedirectToAction(nameof(Index));
 
             }
-            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Details(int id)
@@ -116,26 +144,61 @@ namespace InventoryBeginners.Controllers
         public IActionResult Edit(int id)
         {
             Unit unit = _unitRepo.GetUnit(id);
+            TempData.Keep();
             return View(unit);
         }
 
         [HttpPost]
         public IActionResult Edit(Unit unit)
         {
+
+            bool bolret = false;
+            string errMessage = "";
+
             try
             {
+                if(unit.Description.Length<4 || unit.Description==null)
+                    errMessage = "Unit Description Must be atleast 4 Characters";
+
+                if (_unitRepo.IsUnitNameExists(unit.Name, unit.Id) == true)
+                    errMessage = errMessage + "Unit Name " + unit.Name + " Already Exists";
+
+                if (errMessage =="")
+                {
+                    unit = _unitRepo.Edit(unit);
+                    TempData["SuccessMessage"] = unit.Name + ", Unit Saved Succesfully";
+                    bolret = true;
+                }
+
                 unit = _unitRepo.Edit(unit);
             }
-            catch
+            catch(Exception ex)
             {
-
+                 errMessage = " " + ex.Message;
             }
-            return RedirectToAction(nameof(Index));
+
+            TempData["SuccessMessage"] ="Unit " + unit.Name + " Saved Succesfully";
+
+            int currentPage = 1;
+            if(TempData["CurrentPage"]!=null)
+            {
+                currentPage = (int)TempData["CurrentPage"];
+            }
+
+            if (bolret == false)
+            {
+                TempData["ErrorMessage"] = errMessage;
+                ModelState.AddModelError("", errMessage);
+                return View(unit);
+            }
+            else
+                return RedirectToAction(nameof(Index), new { pg = currentPage });
         }
 
         public IActionResult Delete(int id)
         {
             Unit unit = _unitRepo.GetUnit(id);
+            TempData.Keep();
             return View(unit);
         }
 
@@ -146,13 +209,22 @@ namespace InventoryBeginners.Controllers
             {
                 unit = _unitRepo.Delete(unit);
             }
-            catch
+            catch(Exception ex)
             {
-
+                string errMessage = ex.Message;
+                TempData["ErrorMessage"] = errMessage;
+                ModelState.AddModelError("", errMessage);
+                return View(unit);
             }
-            return RedirectToAction(nameof(Index));
+
+            int currentPage = 1;
+            if (TempData["CurrentPage"] != null)
+            {
+                currentPage = (int)TempData["CurrentPage"];
+            }
+
+            TempData["SuccessMessage"] = " Unit " + unit.Name + " Deleted Succesfully";
+            return RedirectToAction(nameof(Index), new { pg = currentPage });
         }
-
-
     }
 }

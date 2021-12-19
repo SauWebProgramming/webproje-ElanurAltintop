@@ -26,7 +26,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand @menuTextColor" asp-area="" asp-controller="Home" asp-action="Index">InventoryBeginners</a>
+                <a class="navbar-brand @menuTextColor" asp-area="" asp-controller="Home" asp-action="Index">Inventory Control System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -38,9 +38,27 @@
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link @menuTextColor" asp-area="" asp-controller="Unit" asp-action="Index">Units</a>
-                            </li>
+                            <li class="dropdown nav-item pr-2">
+                                <a class="nav-link dropdown-toggle  @menuTextColor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Masters
+                                </a>
+
+                                <ul class="dropdown-menu" style="background: linear-gradient(to right,#986868,#8e6161);">
+                                    <li class="nav-item">
+                                        <a class="nav-link @menuTextColor" asp-area="" asp-controller="Unit" asp-action="Index">Units</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @menuTextColor" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @menuTextColor" asp-area="" asp-controller="Brand" asp-action="Index">Brands</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @menuTextColor" asp-area="" asp-controller="ProductProfile" asp-action="Index">ProductProfile</a>
+                                    </li>
+                                </ul>
+                                </li>
+
                         }
                         <li class="nav-item">
                             <a class="nav-link @menuTextColor" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

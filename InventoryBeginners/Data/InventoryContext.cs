@@ -16,5 +16,9 @@ namespace InventoryBeginners.Data
         }
 
         public virtual DbSet<Unit> Units { get; set; }
+        public virtual DbSet<Brand> Brands { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<ProductProfile> ProductProfiles { get; set; }
+
     }
 }

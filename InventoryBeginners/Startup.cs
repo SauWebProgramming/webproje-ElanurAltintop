@@ -32,7 +32,11 @@ namespace InventoryBeginners
         {
             services.AddControllersWithViews();
             services.AddScoped<IUnit, UnitRepository>();
-            
+            services.AddScoped<ICategory, CategoryRepository>();
+            services.AddScoped<IBrand, BrandRepository>();
+            services.AddScoped<IProductProfile, ProductProfileRepository>();
+
+
             services.AddDbContext<InventoryContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
